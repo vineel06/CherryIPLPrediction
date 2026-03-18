@@ -1,0 +1,58 @@
+# Python bytecode and cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE settings
+.vscode/
+.idea/
+*.sublime-*
+*.swp
+*.swo
+*~
+
+# Database – if you don't want to include the actual database file
+# (You can keep a small empty db or schema file instead)
+data/ipl.db
+*.db
+*.sqlite
+*.sqlite3
+
+# ML model files (can be regenerated)
+model/xgb_model.pkl
+model/*.pkl
+model/*.joblib
+
+# Processed numpy arrays
+data/processed/*.npy
+
+# Logs and local config
+*.log
+*.pot
+*.pyc
+__pycache__/
+.env
+.flaskenv
+.python-version
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
