@@ -21,7 +21,7 @@ Built with Python (Flask, XGBoost) and a dark cricket‑themed UI.
 
 ## 🚀 Run Locally
 1. Clone the repo  
-   `git clone https://github.com/yourusername/CherryIPLPrediction.git`
+   `git clone https://github.com/vineel06/CherryIPLPrediction.git`
 2. Install dependencies  
    `pip install -r requirements.txt`
 3. Initialize the database  
