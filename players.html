@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-person-badge"></i> IPL 2026 Players</h1>
+
+<!-- Search Bar -->
+<div class="row mb-4">
+    <div class="col-md-6 offset-md-3">
+        <input type="text" id="playerSearch" class="form-control" placeholder="🔍 Search players by name...">
+    </div>
+</div>
+
+<!-- Team Filters with Colors -->
+<div class="row mb-4">
+    <div class="col-12 text-center">
+        <button class="btn team-filter active mx-1 mb-2" data-team="all" style="background: #ffd700; color: #000;">All Teams</button>
+        {% set teams_shown = [] %}
+        {% for player in players %}
+            {% if player.team_name and player.team_name not in teams_shown %}
+                <button class="btn team-filter mx-1 mb-2" data-team="{{ player.team_name }}"
+                        style="background: {{ team_colors.get(player.team_name, '#2a2f42') }};
+                               color: {% if player.team_name in ['Chennai Super Kings', 'Sunrisers Hyderabad'] %}#000{% else %}#fff{% endif %};">
+                    {{ player.team_name }}
+                </button>
+                {% set _ = teams_shown.append(player.team_name) %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Players Grid -->
+<div class="row" id="playersGrid">
+    {% for player in players %}
+    <div class="col-md-3 col-sm-6 mb-4 player-card" data-player-name="{{ player.name.lower() }}" data-team-name="{{ player.team_name or '' }}" data-role="{{ player.role or '' }}">
+        <div class="card h-100" style="border-top: 3px solid {{ team_colors.get(player.team_name, '#ffd700') }};">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto"
+                         style="width: 80px; height: 80px; background: {{ team_colors.get(player.team_name, '#2a2f42') }};">
+                        <i class="bi bi-person display-4" style="color: {% if player.team_name in ['Chennai Super Kings', 'Sunrisers Hyderabad'] %}#000{% else %}#fff{% endif %};"></i>
+                    </div>
+                </div>
+                <h5 class="card-title">{{ player.name }}</h5>
+                <p class="card-text">
+                    <span class="badge" style="background: {{ team_colors.get(player.team_name, '#2a2f42') }}; color: {% if player.team_name in ['Chennai Super Kings', 'Sunrisers Hyderabad'] %}#000{% else %}#fff{% endif %};">
+                        {{ player.team_name or 'Team TBD' }}
+                    </span><br>
+                    <span class="badge bg-secondary mt-1">{{ player.role or 'Player' }}</span>
+                </p>
+                {% if player.price %}
+                <p class="card-text"><small class="text-warning">₹{{ player.price }} Cr</small></p>
+                {% endif %}
+                <a href="{{ url_for('player_detail', player_id=player.id) }}" class="btn btn-cricket btn-sm">View Stats</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+// Search functionality
+document.getElementById('playerSearch').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const cards = document.querySelectorAll('.player-card');
+
+    cards.forEach(card => {
+        const playerName = card.dataset.playerName;
+        if (playerName.includes(searchTerm)) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+});
+
+// Team filter functionality
+document.querySelectorAll('.team-filter').forEach(button => {
+    button.addEventListener('click', function() {
+        const teamName = this.dataset.team;
+
+        // Update active state
+        document.querySelectorAll('.team-filter').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+
+        // Filter cards
+        const cards = document.querySelectorAll('.player-card');
+        cards.forEach(card => {
+            if (teamName === 'all' || card.dataset.teamName === teamName) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

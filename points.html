@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-table"></i> IPL 2026 Points Table</h1>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-dark table-striped table-hover">
+                <thead>
+                    <tr style="background: linear-gradient(135deg, #ffd700, #e5c100); color: #000;">
+                        <th>Pos</th>
+                        <th>Team</th>
+                        <th>Played</th>
+                        <th>Won</th>
+                        <th>Lost</th>
+                        <th>Points</th>
+                        <th>NRR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in points_table %}
+                    <tr style="border-left: 4px solid {{ team_colors.get(row.team, '#ffd700') }};">
+                        <td><strong>{{ loop.index }}</strong></td>
+                        <td>
+                            <span class="team-badge" style="background: {{ team_colors.get(row.team, '#2a2f42') }};
+                                 color: {% if row.team in ['Chennai Super Kings', 'Sunrisers Hyderabad'] %}#000{% else %}#fff{% endif %};
+                                 padding: 5px 15px; border-radius: 20px; display: inline-block;">
+                                {{ row.team }}
+                            </span>
+                        </td>
+                        <td><strong>{{ row.played }}</strong></td>
+                        <td><span class="text-success">{{ row.wins }}</span></td>
+                        <td><span class="text-danger">{{ row.losses }}</span></td>
+                        <td><strong class="text-warning">{{ row.points }}</strong></td>
+                        <td><span class="text-info">{{ "%.3f"|format(row.nrr) if row.nrr else "0.000" }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .table tbody tr:hover {
+        transform: scale(1.01);
+        transition: transform 0.2s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .team-badge {
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .team-badge:hover {
+        transform: translateX(5px);
+        filter: brightness(1.1);
+    }
+</style>
+{% endblock %}

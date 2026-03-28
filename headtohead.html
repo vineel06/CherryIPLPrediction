@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-arrow-left-right"></i> Head to Head - IPL 2026</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Team 1</label>
+                        <select name="team1" class="form-select" required>
+                            <option value="">Select team</option>
+                            {% for team in teams %}
+                            <option value="{{ team.name }}" {% if team1 == team.name %}selected{% endif %}>{{ team.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Team 2</label>
+                        <select name="team2" class="form-select" required>
+                            <option value="">Select team</option>
+                            {% for team in teams %}
+                            <option value="{{ team.name }}" {% if team2 == team.name %}selected{% endif %}>{{ team.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-cricket w-100">Show Head to Head</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        {% if matches %}
+        <div class="card">
+            <div class="card-body">
+                <h3>IPL 2026 Matches between {{ team1 }} and {{ team2 }}</h3>
+                {% if matches|length > 0 %}
+                <div class="alert alert-info">
+                    <strong>Total Matches in IPL 2026:</strong> {{ matches|length }}<br>
+                </div>
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table class="table table-dark table-striped">
+                        <thead>
+                            <tr>
+                                <th>Match #</th>
+                                <th>Date</th>
+                                <th>Venue</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for match in matches %}
+                            <tr>
+                                <td>{{ match.match_number }}</td>
+                                <td>{{ match.date }}</td>
+                                <td>{{ match.venue_name }}</td>
+                                <td>{% if match.winner_name %}<span class="text-success">{{ match.winner_name }} won</span>{% else %}<span class="text-warning">Not played yet</span>{% endif %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-warning">No matches scheduled between {{ team1 }} and {{ team2 }} in IPL 2026.</div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-people"></i> IPL 2026 Teams</h1>
+
+<div class="row">
+    {% for team in teams %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100" style="border-left: 5px solid {{ team_colors.get(team.name, '#ffd700') }};">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto"
+                         style="width: 80px; height: 80px; background: {{ team_colors.get(team.name, '#2a2f42') }};">
+                        <i class="bi bi-trophy-fill display-4" style="color: {% if team.name in ['Chennai Super Kings', 'Sunrisers Hyderabad'] %}#000{% else %}#fff{% endif %};"></i>
+                    </div>
+                </div>
+                <h3 class="card-title" style="color: {{ team_colors.get(team.name, '#ffd700') }};">{{ team.name }}</h3>
+                <a href="{{ url_for('team_detail', team_id=team.id) }}" class="btn btn-cricket mt-3">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

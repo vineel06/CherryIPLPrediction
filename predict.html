@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-graph-up"></i> Custom Prediction</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <form method="post" id="predictionForm">
+                    <div class="mb-3">
+                        <label class="form-label">Team 1</label>
+                        <select name="team1" class="form-select" required>
+                            <option value="">Select team</option>
+                            {% for team in teams %}
+                            <option value="{{ team.name }}" {% if selected_team1 == team.name %}selected{% endif %}>{{ team.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Team 2</label>
+                        <select name="team2" class="form-select" required>
+                            <option value="">Select team</option>
+                            {% for team in teams %}
+                            <option value="{{ team.name }}" {% if selected_team2 == team.name %}selected{% endif %}>{{ team.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Venue</label>
+                        <select name="venue" class="form-select" required>
+                            <option value="">Select venue</option>
+                            {% for venue in venues %}
+                            <option value="{{ venue.name }}" {% if selected_venue == venue.name %}selected{% endif %}>{{ venue.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Toss Winner (optional)</label>
+                        <select name="toss_winner" class="form-select">
+                            <option value="">Unknown</option>
+                            {% for team in teams %}
+                            <option value="{{ team.name }}" {% if selected_toss_winner == team.name %}selected{% endif %}>{{ team.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Toss Decision</label>
+                        <select name="toss_decision" class="form-select">
+                            <option value="">Unknown</option>
+                            <option value="bat" {% if selected_toss_decision == 'bat' %}selected{% endif %}>Bat</option>
+                            <option value="field" {% if selected_toss_decision == 'field' %}selected{% endif %}>Field</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-cricket w-100">Predict Winner</button>
+                    <a href="/predict" class="btn btn-outline-secondary w-100 mt-2">Reset Form</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        {% if result %}
+        <div class="card bg-success bg-opacity-10">
+            <div class="card-body">
+                <h3>Prediction Result</h3>
+                <p>{{ result.team1 }} <strong>{{ "%.1f"|format(result.prob1*100) }}%</strong> vs {{ result.team2 }} <strong>{{ "%.1f"|format(result.prob2*100) }}%</strong></p>
+                <div class="progress mb-3" style="height: 30px;">
+                    <div class="progress-bar"
+                         style="width: {{ result.prob1*100 }}%; background-color: {{ team_colors.get(result.team1, '#cccccc') }};">
+                        {{ "%.1f"|format(result.prob1*100) }}%
+                    </div>
+                    <div class="progress-bar"
+                         style="width: {{ result.prob2*100 }}%; background-color: {{ team_colors.get(result.team2, '#cccccc') }};">
+                        {{ "%.1f"|format(result.prob2*100) }}%
+                    </div>
+                </div>
+                <h4 class="text-warning">Winner: {{ result.winner }}</h4>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

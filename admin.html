@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4"><i class="bi bi-shield-lock"></i> Admin Overrides</h1>
+<p>Submit manual updates (injuries, toss results, prediction overrides).</p>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h3>Add Override</h3>
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="match_id" class="form-label">Match</label>
+                        <select class="form-select" name="match_id" id="match_id" required>
+                            <option value="">Select match</option>
+                            {% for m in upcoming %}
+                            <option value="{{ m.id }}">{{ m.team1 }} vs {{ m.team2 }} ({{ m.date }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="override_type" class="form-label">Type</label>
+                        <select class="form-select" name="override_type" id="override_type" required>
+                            <option value="injury">Player Injury</option>
+                            <option value="toss">Toss Result</option>
+                            <option value="prediction">Prediction Override</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="player_id" class="form-label">Player (if injury)</label>
+                        <select class="form-select" name="player_id" id="player_id">
+                            <option value="">None</option>
+                            {% for p in players %}
+                            <option value="{{ p.id }}">{{ p.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new_value" class="form-label">New Value</label>
+                        <input type="text" class="form-control" name="new_value" id="new_value" required placeholder="e.g., Out, Team A won toss, etc.">
+                    </div>
+                    <button type="submit" class="btn btn-cricket">Submit Override</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h3>Existing Overrides</h3>
+                <table class="table table-dark table-sm">
+                    <thead>
+                        <tr>
+                            <th>Match</th>
+                            <th>Type</th>
+                            <th>Player</th>
+                            <th>New Value</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for o in overrides %}
+                        <tr>
+                            <td>{{ o.team1_name }} vs {{ o.team2_name }}</td>
+                            <td>{{ o.override_type }}</td>
+                            <td>{{ o.player_id }}</td>  <!-- could join player name -->
+                            <td>{{ o.new_value }}</td>
+                            <td>{{ o.created_at }}</td>
+                        </tr>
+                        <td>
+    <form method="post" action="{{ url_for('delete_override', override_id=o.id) }}" style="display:inline;">
+        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this override?')">Delete</button>
+    </form>
+</td>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
